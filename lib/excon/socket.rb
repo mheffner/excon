@@ -158,6 +158,7 @@ module Excon
 
           socket = ::Socket.new(a_family, s_type, 0)
 
+
           if @data[:nonblock]
             socket.connect_nonblock(sockaddr)
           else
@@ -197,6 +198,12 @@ module Excon
       unless @socket
         # this will be our last encountered exception
         raise exception
+      end
+
+      if @data[:tcp_nodelay]
+        @socket.setsockopt(::Socket::IPPROTO_TCP,
+                           ::Socket::TCP_NODELAY,
+                           true)
       end
     end
 
